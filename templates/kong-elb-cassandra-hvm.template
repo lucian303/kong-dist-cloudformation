@@ -270,7 +270,7 @@
       "DependsOn" : "KongGroup",
       "Properties" : {
         "Handle"  : { "Ref" : "KongWaitHandle" },
-        "Timeout" : "1500",
+        "Timeout" : "2500",
         "Count"   : { "Ref" : "KongFleetDesiredSize" }
       }
     },
