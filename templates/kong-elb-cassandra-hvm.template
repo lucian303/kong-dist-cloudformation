@@ -270,7 +270,7 @@
       "DependsOn" : "KongGroup",
       "Properties" : {
         "Handle"  : { "Ref" : "KongWaitHandle" },
-        "Timeout" : "900",
+        "Timeout" : "1500",
         "Count"   : { "Ref" : "KongFleetDesiredSize" }
       }
     },
@@ -316,17 +316,17 @@
                 "if [ -e \".\/kong.rpm\" ]\n",
                 "then\n",
                 "   echo \"Installing Kong...\" \n",
-                "else\n", 
+                "else\n",
                 "   /opt/aws/bin/cfn-signal -e 1 --reason \"Failed to download Kong\" '", { "Ref" : "KongWaitHandle" }, "'\n",
                 "   echo \"failed to download kong, exiting...\" \n",
                 "   exit\n",
-                "fi\n", 
+                "fi\n",
                 "yum install -y epel-release\n",
                 "yum install -y kong.rpm --nogpgcheck\n",
                 "cassandra_hosts=", { "Fn::GetAtt": [ "CassandraWaitCondition", "Data" ] }, "\n",
                 "cassandra_hosts=$(echo $cassandra_hosts | awk -F\"{\" '{print $2}')\n",
                 "cassandra_hosts=$(echo $cassandra_hosts | awk -F\"}\" '{print $1}')\n",
-                "IFS=', ' read -a host_array <<< \"$cassandra_hosts\"\n",   
+                "IFS=', ' read -a host_array <<< \"$cassandra_hosts\"\n",
                 "for i in \"${host_array[@]}\"\n",
                 "do\n",
                 "   hostName=$(echo $i | awk -F\":\" '{print $1}')\n",
@@ -347,9 +347,9 @@
                 "      su -s \/bin\/sh -c \"\/usr\/local\/bin\/kong start\" ec2-user\n",
                 "      count=\"$(($count-1))\"\n",
                 "      sleep 15s\n",
-                "   fi\n", 
+                "   fi\n",
                 "done\n",
-                "/opt/aws/bin/cfn-signal -e 0 --reason \"Kong setup completed\" '", { "Ref" : "KongWaitHandle" }, "'\n"   
+                "/opt/aws/bin/cfn-signal -e 0 --reason \"Kong setup completed\" '", { "Ref" : "KongWaitHandle" }, "'\n"
               ]
             ]
           }
@@ -438,7 +438,7 @@
           {
             "Ref": "CassandraAvailabilityZone"
           }
-        ], 
+        ],
         "MinSize": {
           "Ref": "CassandraFleetSize"
         },
@@ -557,12 +557,12 @@
           {
             "Ref": "CassandraSecurityGroup"
           }
-        ],  
+        ],
         "UserData": {
           "Fn::Base64": {
             "Fn::Join": [
               "",
-              [ 
+              [
                 "#!\/bin\/bash\n",
                 "apt-get -y install python-setuptools\n",
                 "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
@@ -570,7 +570,7 @@
                 "publichost=`curl http://169.254.169.254/latest/meta-data/public-hostname`\n",
                 "cfn-signal -e 0 --data $publicip --id $publichost --reason \"Kong setup completed\" '", { "Ref" : "CassandraWaitHandle" }, "'\n",
                 "--clustername ",{ "Ref": "CassandraClusterName" }, " --totalnodes ", { "Ref": "KongFleetDesiredSize" }," --version ", { "Ref": "CassandraClusterVersion" }," --release ",{"Ref": "CassandraVersion"},
-                "\n"   
+                "\n"
               ]
             ]
           }
